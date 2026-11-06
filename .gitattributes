@@ -1,0 +1,2 @@
+third_party/SAGE-Unlocked/** -text whitespace=cr-at-eol
+third_party/SAGE-Unlocked/v1.9.5/LICENSE.txt -diff
