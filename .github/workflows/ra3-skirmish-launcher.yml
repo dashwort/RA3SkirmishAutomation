@@ -1,0 +1,51 @@
+name: RA3 Skirmish Launcher CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test-and-package:
+    name: Test and package launcher
+    runs-on: windows-latest
+    env:
+      DOTNET_CLI_TELEMETRY_OPTOUT: '1'
+      DOTNET_NOLOGO: '1'
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Test launcher
+        run: dotnet test tools\RA3SkirmishLauncher.Tests\RA3SkirmishLauncher.Tests.csproj -c Release
+
+      - name: Test automation services
+        run: dotnet run --project tools\EpicWar.Automation.Tests -c Release -- . --services-only
+
+      - name: Test native patch transactions
+        run: dotnet run --project tools\EpicWar.NativePatch.Tests -c Release -- .
+
+      - name: Build release package
+        shell: pwsh
+        run: |
+          $outputDirectory = Join-Path $env:RUNNER_TEMP 'RA3SkirmishLauncher'
+          .\scripts\Publish-Launcher.ps1 -Configuration Release -OutputDirectory $outputDirectory
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: Upload release package
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+        uses: actions/upload-artifact@v4
+        with:
+          name: RA3SkirmishLauncher-${{ github.sha }}
+          path: ${{ runner.temp }}\RA3SkirmishLauncher
+          if-no-files-found: error
+          retention-days: 30

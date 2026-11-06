@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <AssemblyName>RA3SkirmishAutomation</AssemblyName>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../RA3SkirmishLauncher.Core/RA3SkirmishLauncher.Core.csproj" />
+    <Content Include="..\..\Presets\*.ini" Link="Presets\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" ExcludeFromSingleFile="true" />
+    <EmbeddedResource Include="Native\ra3-1.12-abi4.json" LogicalName="EpicWar.Automation.Native.ra3-1.12-abi4.json" />
+    <EmbeddedResource Include="Vision\*.png" />
+    <EmbeddedResource Include="..\..\artifacts\AutoSkirmish\navigation-once\Epic-War-navigation-once-20261029.big" LogicalName="EpicWar.Automation.Navigation.big" />
+    <Content Include="..\..\artifacts\runtime-dependencies\x86\d3dx9_35.dll" Link="dependencies\x86\d3dx9_35.dll" TargetPath="dependencies\x86\d3dx9_35.dll" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" ExcludeFromSingleFile="true" />
+  </ItemGroup>
+</Project>

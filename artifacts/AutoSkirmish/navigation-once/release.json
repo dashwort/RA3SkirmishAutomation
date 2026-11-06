@@ -1,0 +1,9 @@
+{
+  "buildId": "navigation-once-20261029",
+  "bigFile": "Epic-War-navigation-once-20261029.big",
+  "sha256": "72369DF72E3CEFFA758C6C671520AC1DE9F8FA61E1DD730B6237CADBCF31C388",
+  "navigationOnly": true,
+  "setupNavigationVerified": true,
+  "runtimeVerified": true,
+  "acceptance": "Epic War setup opened automatically; manual Begin loaded a rendered match; Statistics > Main Menu remained on the main menu for at least 15 seconds. Profile, replay and 769 map files restored. The guarded overlay is embedded in the promoted launcher candidate."
+}

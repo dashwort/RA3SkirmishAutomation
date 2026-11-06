@@ -1,0 +1,33 @@
+{
+  "buildId": "2026-09-26-v36-navigation",
+  "bigFile": "Epic War 5.2-AutoSkirmish-2026-09-26-v36-navigation.big",
+  "sha256": "971C45ACC2794B06D95CA2BA64488FAE49B8E95E52C8BA6C0EEB800EAAD41615",
+  "entries": 4,
+  "aptStreams": [
+    "feg_m_mainMenu3D.8"
+  ],
+  "targetGameVersion": "1.12",
+  "compiledLods": [
+    "normal"
+  ],
+  "babLog": "C:\\Users\\david\\OneDrive\\Personal_Coding_Projects\\C#\\RedAlert3EpicWarSorter\\RA3_Epic_War_5.2_Source_Code\\.build\\auto-skirmish-2026-09-26-v36-navigation\\bab.log",
+  "packageValidated": true,
+  "automationPatched": true,
+  "patchedScreens": "main",
+  "navigationOnly": true,
+  "aptRoundTripOnly": false,
+  "clonedStockAction": false,
+  "appendedPadding": false,
+  "inPlaceStringProbe": false,
+  "traceToPopProbe": false,
+  "inPlacePatch": true,
+  "exitProbe": false,
+  "flatExitProbe": false,
+  "rootClassProbe": false,
+  "binaryPatch": false,
+  "packedTextureImagesIncluded": true,
+  "runtimeVerified": false,
+  "setupNavigationVerified": true,
+  "skirmishVerified": false,
+  "evidence": "SHA256 matches main-only v22, observed reaching configured skirmish setup without input on 2026-09-26. Does not start a match."
+}

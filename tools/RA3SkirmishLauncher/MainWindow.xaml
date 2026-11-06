@@ -1,0 +1,91 @@
+<Window
+    x:Class="RA3SkirmishLauncher.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="RA3 Skirmish Launcher">
+    <Grid x:Name="Root" RequestedTheme="Dark" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Loaded="Root_Loaded">
+        <TabView IsAddTabButtonVisible="False" Margin="20"><TabViewItem Header="Launch" IsClosable="False"><ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+            <StackPanel MaxWidth="760" Margin="32,28" Spacing="24" HorizontalAlignment="Stretch">
+                <StackPanel Spacing="6">
+                    <TextBlock Text="RED ALERT 3" FontSize="12" FontWeight="SemiBold" CharacterSpacing="180"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                    <TextBlock Text="Skirmish" FontSize="28" FontWeight="SemiBold" />
+
+                </StackPanel>
+
+                <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="1" CornerRadius="8" Padding="24">
+                    <StackPanel Spacing="22">
+                        <StackPanel Spacing="8">
+                            <ComboBox Header="Game / mod" ItemsSource="{Binding Games}" SelectedItem="{Binding SelectedGame, Mode=TwoWay}"
+                                      DisplayMemberPath="Name" HorizontalAlignment="Stretch" IsEnabled="{Binding CanConfigure}"
+                                      AutomationProperties.Name="Game or mod" />
+                            <TextBlock Text="{Binding RouteDescription}" TextWrapping="Wrap" FontSize="12"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                        </StackPanel>
+                        <StackPanel Spacing="10">
+                            <ComboBox Header="Skirmish preset" ItemsSource="{Binding Presets.Items}" SelectedItem="{Binding Presets.Selected, Mode=TwoWay}"
+                                      DisplayMemberPath="Name" HorizontalAlignment="Stretch" AutomationProperties.Name="Skirmish preset"
+                                      IsEnabled="{Binding CanUsePresets}" />
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <Button Content="Import INI" Click="Import_Click" IsEnabled="{Binding CanUsePresets}" />
+                                <Button Content="Save as…" Click="SaveAs_Click" IsEnabled="{Binding CanUsePresets}" />
+                                <Button Content="Open folder" Click="OpenFolder_Click" IsEnabled="{Binding CanUsePresets}" />
+                            </StackPanel>
+                        </StackPanel>
+                        <Grid ColumnSpacing="16">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                            <StackPanel Spacing="4">
+                                <TextBlock Text="4 GB memory support" FontWeight="SemiBold" />
+                            </StackPanel>
+                            <ToggleSwitch Grid.Column="1" IsOn="{Binding MemoryEnabled, Mode=TwoWay}" IsEnabled="{Binding CanChangeMemory}"
+                                          OnContent="On" OffContent="Off" AutomationProperties.Name="4 GB memory support" />
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <StackPanel Spacing="12">
+                    <Button Content="Launch game" Command="{Binding LaunchCommand}" Style="{StaticResource AccentButtonStyle}"
+                            HorizontalAlignment="Stretch" Height="48" FontSize="16" FontWeight="SemiBold" />
+                    <Button Content="Stop game" Command="{Binding StopGameCommand}" HorizontalAlignment="Stretch" Height="40" />
+                    <ProgressBar IsIndeterminate="{Binding IsBusy}" Height="3" />
+                    <TextBlock Text="{Binding Status}" TextWrapping="Wrap" AutomationProperties.LiveSetting="Polite" />
+                    <TextBlock Text="{Binding EngineStatus}" TextWrapping="Wrap" FontSize="12"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                </StackPanel>
+
+                </StackPanel></ScrollViewer></TabViewItem><TabViewItem Header="Settings" IsClosable="False" IsEnabled="{Binding CanConfigure}"><ScrollViewer VerticalScrollBarVisibility="Auto"><StackPanel Margin="24" Spacing="16">
+                        <Grid ColumnSpacing="8">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                            <TextBox Header="RA3 game folder" Text="{Binding Settings.GameRoot, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            <Button Grid.Column="1" Content="Browse…" VerticalAlignment="Bottom" Tag="game" Click="BrowseFolder_Click" />
+                        </Grid>
+                        <ComboBox Header="RA3 profile (must also be selected in the game)" ItemsSource="{Binding Profiles}"
+                                  SelectedItem="{Binding Settings.Profile, Mode=TwoWay}" HorizontalAlignment="Stretch" />
+                        <Grid ColumnSpacing="8">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                            <TextBox Header="Shared preset folder" Text="{Binding Settings.PresetDirectory, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            <Button Grid.Column="1" Content="Browse…" VerticalAlignment="Bottom" Tag="presets" Click="BrowseFolder_Click" />
+                        </Grid>
+                        <Grid ColumnSpacing="8">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                            <TextBox Header="Original engine backup folder" Text="{Binding Settings.BackupDirectory, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            <Button Grid.Column="1" Content="Browse…" VerticalAlignment="Bottom" Tag="backup" Click="BrowseFolder_Click" />
+                        </Grid>
+                        <TextBox Header="Extra mod folders (one per line)" AcceptsReturn="True" MinHeight="84"
+                                 Text="{Binding Settings.ExtraModLocations, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        <CheckBox Content="Temporarily isolate incompatible custom maps and restore them after the game"
+                                  IsChecked="{Binding Settings.IsolateMaps, Mode=TwoWay}" />
+                        <ToggleSwitch Header="SAGE Unlocked 60 FPS" IsOn="{Binding Settings.HighFrameRateEnabled, Mode=TwoWay}"
+                                      OnContent="On" OffContent="Off" AutomationProperties.Name="SAGE Unlocked 60 FPS" />
+                        <ComboBox x:Name="ThemePicker" Header="Appearance" SelectionChanged="Theme_SelectionChanged" HorizontalAlignment="Stretch" />
+                        <Button Content="Apply settings" Click="ApplySettings_Click" /><TextBlock Text="{Binding Status}" TextWrapping="Wrap" AutomationProperties.LiveSetting="Polite" />
+                        </StackPanel></ScrollViewer></TabViewItem><TabViewItem Header="Recovery" IsClosable="False" IsEnabled="{Binding CanConfigure}"><ScrollViewer VerticalScrollBarVisibility="Auto"><StackPanel Margin="24" Spacing="16"><TextBlock Text="Native skirmish support" FontWeight="SemiBold" />
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <Button Content="Status" Tag="status" Click="Patch_Click" />
+                            <Button Content="Install support" Tag="install" Click="Patch_Click" />
+                            <Button Content="Restore original" Tag="restore" Click="Patch_Click" />
+                            <Button Content="Recover" Tag="recover" Click="Patch_Click" />
+                        </StackPanel><TextBlock Text="{Binding Status}" TextWrapping="Wrap" AutomationProperties.LiveSetting="Polite" /><TextBlock Text="{Binding EngineStatus}" TextWrapping="Wrap" /></StackPanel></ScrollViewer></TabViewItem></TabView>
+    </Grid>
+</Window>
