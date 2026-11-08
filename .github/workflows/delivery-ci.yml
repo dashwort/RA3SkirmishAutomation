@@ -1,0 +1,62 @@
+name: Delivery CI
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: delivery-ci-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  test:
+    name: Delivery required
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9
+        with:
+          dotnet-version: '10.0.402'
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24.x'
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.13'
+      - name: OpenMedia build and tests
+        if: 'false'
+        shell: pwsh
+        run: |
+          dotnet restore OpenMedia.slnx
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          dotnet test tests/OpenMedia.Tests -c Release --logger trx
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          if (Test-Path src/OpenMedia.Web/package.json) {
+            Set-Location src/OpenMedia.Web
+            npm ci
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+            npm run check
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+            npm test
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+            npm run build
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+            npm run test:package
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          }
+      - name: Launcher test and package
+        if: 'true'
+        shell: pwsh
+        run: |
+          dotnet test tools/RA3SkirmishLauncher.Tests -c Release
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          dotnet run --project tools/EpicWar.Automation.Tests -c Release -- . --services-only
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          dotnet run --project tools/EpicWar.NativePatch.Tests -c Release -- .
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          ./scripts/Publish-Launcher.ps1 -OutputDirectory "$env:RUNNER_TEMP/launcher"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
