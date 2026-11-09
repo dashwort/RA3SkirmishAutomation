@@ -96,5 +96,5 @@ jobs:
 
           Extract the package and keep its files together. Back up your game profile before using direct launch.
           "@ | Set-Content -LiteralPath $notes -Encoding utf8
-          gh release create $env:GITHUB_REF_NAME $archive --verify-tag --prerelease --latest=false --title "RA3 Skirmish Launcher $env:GITHUB_REF_NAME" --notes-file $notes
+          gh release create $env:GITHUB_REF_NAME $archive --repo $env:GITHUB_REPOSITORY --verify-tag --prerelease --latest=false --title "RA3 Skirmish Launcher $env:GITHUB_REF_NAME" --notes-file $notes
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
