@@ -90,7 +90,7 @@ jobs:
           @"
           ## Alpha preview
 
-          Built from source commit `$env:GITHUB_SHA`. Automated checks and packaging passed.
+          Built from source commit $env:GITHUB_SHA. Automated checks and packaging passed.
 
           Real-game behavior has not been verified for this release. Earlier live tests showed crashes on some direct-launch sessions and a DirectX error on one mod-menu route.
 
