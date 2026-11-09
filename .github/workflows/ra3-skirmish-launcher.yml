@@ -2,6 +2,8 @@ name: RA3 Skirmish Launcher CI
 
 on:
   push:
+    branches: [main]
+    tags: ['v*-alpha*']
   pull_request:
   workflow_dispatch:
 
@@ -49,3 +51,50 @@ jobs:
           path: ${{ runner.temp }}\RA3SkirmishLauncher
           if-no-files-found: error
           retention-days: 30
+
+  publish-alpha:
+    name: Publish alpha release
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    needs: test-and-package
+    runs-on: windows-latest
+    permissions:
+      actions: read
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+
+    steps:
+      - name: Download package built by this run
+        shell: pwsh
+        run: |
+          $releaseDirectory = Join-Path $env:RUNNER_TEMP 'release'
+          New-Item -ItemType Directory -Force -Path $releaseDirectory | Out-Null
+          gh run download $env:GITHUB_RUN_ID --repo $env:GITHUB_REPOSITORY --name "RA3SkirmishLauncher-$env:GITHUB_SHA" --dir $releaseDirectory
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: Create alpha package archive
+        shell: pwsh
+        run: |
+          if ($env:GITHUB_REF_NAME -notmatch '^v\d+\.\d+\.\d+-alpha(?:\.\d+)?$') {
+            throw "Unsupported alpha tag: $env:GITHUB_REF_NAME"
+          }
+          $releaseDirectory = Join-Path $env:RUNNER_TEMP 'release'
+          $archive = Join-Path $env:RUNNER_TEMP "RA3SkirmishLauncher-$env:GITHUB_REF_NAME-win-x64.zip"
+          Compress-Archive -Path (Join-Path $releaseDirectory '*') -DestinationPath $archive
+
+      - name: Publish GitHub pre-release
+        shell: pwsh
+        run: |
+          $archive = Join-Path $env:RUNNER_TEMP "RA3SkirmishLauncher-$env:GITHUB_REF_NAME-win-x64.zip"
+          $notes = Join-Path $env:RUNNER_TEMP 'release-notes.md'
+          @"
+          ## Alpha preview
+
+          Built from source commit `$env:GITHUB_SHA`. Automated checks and packaging passed.
+
+          Real-game behavior has not been verified for this release. Earlier live tests showed crashes on some direct-launch sessions and a DirectX error on one mod-menu route.
+
+          Extract the package and keep its files together. Back up your game profile before using direct launch.
+          "@ | Set-Content -LiteralPath $notes -Encoding utf8
+          gh release create $env:GITHUB_REF_NAME $archive --repo $env:GITHUB_REPOSITORY --verify-tag --prerelease --latest=false --title "RA3 Skirmish Launcher $env:GITHUB_REF_NAME" --notes-file $notes
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
