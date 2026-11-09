@@ -13,7 +13,7 @@ There is no separate launch-mode selector.
 
 ## Download and run
 
-After a commit is pushed, GitHub Actions builds a Windows package. Download the latest `RA3SkirmishLauncher` artifact from the [Actions page](https://github.com/dashwort/RA3SkirmishAutomation/actions), keep the package folder intact, and run `RA3SkirmishLauncher.exe`. CI artifacts are retained for 30 days.
+For testing a recent build, download the `RA3SkirmishLauncher` artifact from the [Actions page](https://github.com/dashwort/RA3SkirmishAutomation/actions); CI artifacts are retained for 30 days. Versioned alpha tags (`vX.Y.Z-alpha.N`) trigger the same checks and package build, then publish that CI-built package as a GitHub pre-release. Download the latest pre-release for a persistent release package.
 
 Select the game or mod, choose a preset when the direct route is available, and select **Launch game**. Keep the launcher open until the game closes and cleanup finishes.
 
@@ -43,4 +43,4 @@ dotnet run --project .\tools\EpicWar.Automation.Tests -c Release -- . --services
 dotnet run --project .\tools\EpicWar.NativePatch.Tests -c Release -- .
 ```
 
-GitHub Actions runs these checks and builds a release package on each push. CI does not start the game. The package manifest remains marked for runtime verification until real-game checks are completed.
+GitHub Actions runs these checks and builds a package on pushes to `main` and alpha tags. Alpha tags publish the package only after all checks pass. CI does not start the game; the package manifest remains marked for runtime verification until real-game checks are completed.
