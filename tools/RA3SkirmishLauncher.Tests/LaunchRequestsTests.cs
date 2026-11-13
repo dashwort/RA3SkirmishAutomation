@@ -51,7 +51,7 @@ namespace RA3SkirmishLauncher.Tests
         public void Should_IgnoreLegacyEpicWarModeAndUseDirectPatchedLaunch()
         {
             var legacySettings = System.Text.Json.JsonSerializer.Deserialize<LauncherSettings>("""
-                {"GameRoot":"G:\\RA3","Profile":"dave","PresetDirectory":"D:\\Presets","BackupDirectory":"D:\\Backups","EpicWarLaunchMode":"menu"}
+                {"GameRoot":"G:\\RA3","Profile":"test-profile","PresetDirectory":"D:\\Presets","BackupDirectory":"D:\\Backups","EpicWarLaunchMode":"menu"}
                 """)!;
             var choice = new GameChoice("Epic War", Path.Combine(settings.GameRoot, "RA3 Epic War_5.4.skudef"), LaunchRoute.EpicWarSkirmish);
             var request = LaunchRequests.Create(choice, legacySettings, preset, false);

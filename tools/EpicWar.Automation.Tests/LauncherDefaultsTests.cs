@@ -28,7 +28,7 @@ internal static class LauncherDefaultsTests
         check(LauncherDefaults.InitialPreset(LauncherMode.ModMenu, oldSettings, bundled) == oldSettings["preset"],
             "Legacy mod preset remains available in the optional mod-menu mode");
 
-        var options = LauncherDefaults.NativeOptions(game, "dave", bundled, Path.Combine(root, "NativeBackups"), true);
+        var options = LauncherDefaults.NativeOptions(game, "test-profile", bundled, Path.Combine(root, "NativeBackups"), true);
         check(options["backup-root"] == Path.Combine(root, "NativeBackups") &&
               !options.ContainsKey("base-skudef") && !options.ContainsKey("mod-directory") &&
               options["isolate-incompatible-maps"] == "true",

@@ -13,7 +13,7 @@ There is no separate launch-mode selector.
 
 ## Download and run
 
-For testing a recent build, download the `RA3SkirmishLauncher` artifact from the [Actions page](https://github.com/dashwort/RA3SkirmishAutomation/actions); CI artifacts are retained for 30 days. Versioned alpha tags (`vX.Y.Z-alpha.N`) trigger the same checks and package build, then publish that CI-built package as a GitHub pre-release. Download the latest pre-release for a persistent release package.
+For testing a recent build, download the `RA3SkirmishLauncher` artifact from the [Actions page](https://github.com/dashwort/RA3SkirmishAutomation/actions); CI artifacts are retained for 30 days. Keep the package files together. Versioned alpha tags (`vX.Y.Z-alpha.N`) trigger the same checks and package build, then publish that CI-built package as a GitHub pre-release. Download the latest pre-release for a persistent release package.
 
 Select the game or mod, choose a preset when the direct route is available, and select **Launch game**. Keep the launcher open until the game closes and cleanup finishes.
 

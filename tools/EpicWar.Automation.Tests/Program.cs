@@ -26,14 +26,14 @@ if(args.Length>1 && !servicesOnly){using var actual=new Bitmap(args[1]);Console.
 var results=new List<string>();
 void Check(bool condition,string name){if(!condition)throw new Exception(name);results.Add(name);}
 var nativeModOptions = CliOptions.Parse("launch-skirmish", [
-    "--profile", "dave", "--preset", "fixture.ini", "--mod-directory", "mods",
+    "--profile", "test-profile", "--preset", "fixture.ini", "--mod-directory", "mods",
     "--base-skudef", "RA3 Epic War_5.4.skudef", "--experimental"]);
 Check(nativeModOptions["mod-directory"] == "mods" &&
     nativeModOptions["base-skudef"] == "RA3 Epic War_5.4.skudef" &&
     nativeModOptions.ContainsKey("experimental"),
     "Native compatibility route accepts an explicitly gated mod configuration");
 var nativeBaseOptions = CliOptions.Parse("launch-skirmish", [
-    "--profile", "dave", "--preset", "fixture.ini"]);
+    "--profile", "test-profile", "--preset", "fixture.ini"]);
 Check(!nativeBaseOptions.ContainsKey("mod-directory") && !nativeBaseOptions.ContainsKey("base-skudef"),
     "Native base-game route remains free of mod configuration");
 Check(VanillaSkirmish.ModeName(true) == "native-mod-compatibility" &&
@@ -111,7 +111,7 @@ using(var first=LaunchExclusion.Acquire())
     var refused=Task.Run(()=>{try{using var second=LaunchExclusion.Acquire();return false;}catch(InvalidOperationException){return true;}}).Result;
     Check(refused,"Second launcher cannot race preset or map changes");
 }
-foreach(var badArgs in new[]{new[]{"--proflie","dave"},new[]{"--profile","dave","--profile","dave"},new[]{"--preset","--dry-run"},new[]{"--test-seconds","5"}})
+foreach(var badArgs in new[]{new[]{"--proflie","test-profile"},new[]{"--profile","test-profile","--profile","test-profile"},new[]{"--preset","--dry-run"},new[]{"--test-seconds","5"}})
 {
     try { CliOptions.Parse("launch-game",badArgs);throw new Exception("Expected CLI validation rejection"); }
     catch(ArgumentException) { Check(true,"Rejects ambiguous or unsupported CLI arguments: "+string.Join(" ",badArgs)); }

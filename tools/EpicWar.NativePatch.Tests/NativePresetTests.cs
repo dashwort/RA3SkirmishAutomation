@@ -1,6 +1,6 @@
 using EpicWar.Automation;using System.Text;using System.Buffers.Binary;
 internal static class NativePresetTests { internal static void Run(Action<bool,string> check) {
-var input=Encoding.UTF8.GetBytes("Rts:GameInfo = M=283data/maps/official/map_mp_2_feasel4;MC=0;MS=0;SD=-468773303;GSID=1649;GT=0;PC=-1;RU=1 100 10000 0 0 10 0 1 0 0 0 -1 -1 1 ;S=Hdave,0,0,TT,-1,7,-1,-1,0,1,-1,:CH,-1,7,-1,-1,0,-1:X:X:X:X:;\nRts:Map = data_5Cmaps_5Cofficial_5Cmap_5Fmp_5F2_5Ffeasel4_5Cmap_5Fmp_5F2_5Ffeasel4_2Emap\n");var p=NativeSkirmishPreset.Parse(input);int passed=0;
+var input=Encoding.UTF8.GetBytes("Rts:GameInfo = M=283data/maps/official/map_mp_2_feasel4;MC=0;MS=0;SD=-468773303;GSID=1649;GT=0;PC=-1;RU=1 100 10000 0 0 10 0 1 0 0 0 -1 -1 1 ;S=Hplayer,0,0,TT,-1,7,-1,-1,0,1,-1,:CH,-1,7,-1,-1,0,-1:X:X:X:X:;\nRts:Map = data_5Cmaps_5Cofficial_5Cmap_5Fmp_2_5Ffeasel4_5Cmap_5Fmp_2_5Ffeasel4_2Emap\n");var p=NativeSkirmishPreset.Parse(input);int passed=0;
 void Check(bool b){if(!b)throw new Exception("Fixture failed");passed++;}
 void Reject(Action a){try{a();throw new Exception("Mismatch accepted");}catch(InvalidDataException){passed++;}}
 Check(p.GameId==0x1649);Check(p.MapPrefix==0x283);Check(p.Seed==-468773303);Check(p.Rules.Length==14&&p.Rules[2]==10000);

@@ -44,11 +44,11 @@ namespace RA3SkirmishLauncher.Tests
         public void Should_MigratePreviousSelectedModeAndPreset()
         {
             workspace.Write("legacy.json", Encoding.UTF8.GetBytes("""
-                {"mode":"mod-menu","mod-preset":"previous.ini","base-skudef":"C:\\Mods\\EpicWar.skudef","profile":"dave"}
+                {"mode":"mod-menu","mod-preset":"previous.ini","base-skudef":"C:\\Mods\\EpicWar.skudef","profile":"test-profile"}
                 """));
             var result = sut.Load();
             Assert.AreEqual("previous.ini", result.PreviousPreset);
-            Assert.AreEqual("dave", result.Profile);
+            Assert.AreEqual("test-profile", result.Profile);
             Assert.AreEqual("C:\\Mods\\EpicWar.skudef", result.SelectedGameId);
         }
 
@@ -73,7 +73,7 @@ namespace RA3SkirmishLauncher.Tests
         public void Should_DiscardLegacyEpicWarLaunchModeWhenSavingSettings()
         {
             workspace.Write("Settings/settings.json", Encoding.UTF8.GetBytes("""
-                {"EpicWarLaunchMode":"menu","Theme":"Dark","Profile":"dave"}
+                {"EpicWarLaunchMode":"menu","Theme":"Dark","Profile":"test-profile"}
                 """));
             var loaded = sut.Load();
             sut.Save(loaded);
